@@ -1,6 +1,6 @@
 /*!
- * Glide.js v3.3.0
- * (c) 2013-2019 Jędrzej Chałubek <jedrzej.chalubek@gmail.com> (http://jedrzejchalubek.com/)
+ * Glide.js v3.4.0
+ * (c) 2013-2020 Jędrzej Chałubek <jedrzej.chalubek@gmail.com> (http://jedrzejchalubek.com/)
  * Released under the MIT License.
  */
 
@@ -121,6 +121,13 @@
     dragThreshold: 120,
 
     /**
+     * Angle required to activate slides moving on swiping or dragging.
+     *
+     * @type {Number}
+     */
+    touchAngle: 45,
+
+    /**
      * Moving distance ratio of the slides on a swiping and dragging.
      *
      * @type {Number}
@@ -128,11 +135,11 @@
     touchRatio: 0.5,
 
     /**
-     * Angle required to activate slides moving on swiping or dragging.
+     * Definest how many clones will be created in looped mode.
      *
      * @type {Number}
      */
-    touchAngle: 45,
+    cloneRatio: 1,
 
     /**
      * Duration of the animation in milliseconds.
@@ -203,10 +210,6 @@
         ltr: 'glide--ltr',
         rtl: 'glide--rtl'
       },
-      type: {
-        slider: 'glide--slider',
-        carousel: 'glide--carousel'
-      },
       slide: {
         clone: 'glide__slide--clone',
         active: 'glide__slide--active'
@@ -259,6 +262,21 @@
       return Constructor;
     };
   }();
+
+  var defineProperty = function (obj, key, value) {
+    if (key in obj) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+    } else {
+      obj[key] = value;
+    }
+
+    return obj;
+  };
 
   var _extends = Object.assign || function (target) {
     for (var i = 1; i < arguments.length; i++) {
@@ -457,47 +475,24 @@
   /**
    * Merges passed settings object with default options.
    *
-   * @param  {Object} defaults
-   * @param  {Object} settings
+   * @param  {Object} target
+   * @param  {Object} source
    * @return {Object}
    */
-  function mergeOptions(defaults, settings) {
-    var options = _extends({}, defaults, settings);
+  function mergeDeep(target, source) {
+    var output = _extends({}, target);
 
-    // `Object.assign` do not deeply merge objects, so we
-    // have to do it manually for every nested object
-    // in options. Although it does not look smart,
-    // it's smaller and faster than some fancy
-    // merging deep-merge algorithm script.
-    if (settings.hasOwnProperty('classes')) {
-      options.classes = _extends({}, defaults.classes, settings.classes);
-
-      if (settings.classes.hasOwnProperty('direction')) {
-        options.classes.direction = _extends({}, defaults.classes.direction, settings.classes.direction);
-      }
-
-      if (settings.classes.hasOwnProperty('type')) {
-        options.classes.type = _extends({}, defaults.classes.type, settings.classes.type);
-      }
-
-      if (settings.classes.hasOwnProperty('slide')) {
-        options.classes.slide = _extends({}, defaults.classes.slide, settings.classes.slide);
-      }
-
-      if (settings.classes.hasOwnProperty('arrow')) {
-        options.classes.arrow = _extends({}, defaults.classes.arrow, settings.classes.arrow);
-      }
-
-      if (settings.classes.hasOwnProperty('nav')) {
-        options.classes.nav = _extends({}, defaults.classes.nav, settings.classes.nav);
-      }
+    if (isObject(target) && isObject(source)) {
+      Object.keys(source).forEach(function (key) {
+        if (isObject(source[key])) {
+          if (!(key in target)) _extends(output, defineProperty({}, key, source[key]));else output[key] = mergeDeep(target[key], source[key]);
+        } else {
+          _extends(output, defineProperty({}, key, source[key]));
+        }
+      });
     }
 
-    if (settings.hasOwnProperty('breakpoints')) {
-      options.breakpoints = _extends({}, defaults.breakpoints, settings.breakpoints);
-    }
-
-    return options;
+    return output;
   }
 
   var EventsBus = function () {
@@ -598,7 +593,7 @@
 
       this.disabled = false;
       this.selector = selector;
-      this.settings = mergeOptions(defaults, options);
+      this.settings = mergeDeep(defaults, options);
       this.index = this.settings.startAt;
     }
 
@@ -661,7 +656,7 @@
       value: function update() {
         var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-        this.settings = mergeOptions(this.settings, settings);
+        this.settings = mergeDeep(this.settings, settings);
 
         if (settings.hasOwnProperty('startAt')) {
           this.index = settings.startAt;
@@ -949,7 +944,12 @@
         // While direction is `=` we want jump to
         // a specified index described in steps.
         if (direction === '=') {
-          Glide.index = steps;
+          // Check if bound is true, as we want to avoid whitespaces
+          if (Glide.settings.bound && steps > length) {
+            Glide.index = length;
+          } else {
+            Glide.index = steps;
+          }
 
           return;
         }
@@ -1730,7 +1730,7 @@
        * @return {Number}
        */
       get: function get() {
-        return Components.Html.root.offsetWidth;
+        return Components.Html.root.getBoundingClientRect().width;
       }
     });
 
@@ -1882,6 +1882,7 @@
         var slides = Components.Html.slides;
         var _Glide$settings = Glide.settings,
             perView = _Glide$settings.perView,
+            cloneRatio = _Glide$settings.cloneRatio,
             classes = _Glide$settings.classes;
 
 
@@ -1891,7 +1892,7 @@
           var append = slides.slice(0, cloneCount).reverse();
           var prepend = slides.slice(cloneCount * -1);
 
-          for (var r = 0; r < Math.max(1, Math.floor(perView / slides.length)); r++) {
+          for (var r = 0; r < Math.max(cloneRatio, Math.floor(perView / slides.length)); r++) {
             for (var i = 0; i < append.length; i++) {
               var clone = append[i].cloneNode(true);
 
@@ -2750,27 +2751,14 @@
 
           var swipeDistance = swipe.pageX - swipeStartX;
           var swipeDeg = swipeSin * 180 / Math.PI;
-          var steps = Math.round(swipeDistance / Components.Sizes.slideWidth);
+          var steps = toInt(settings[settings.perSwipe]);
 
           this.enable();
 
           if (swipeDistance > threshold && swipeDeg < settings.touchAngle) {
-            steps = toInt(settings[settings.perSwipe]);
-
-            if (Components.Direction.is('rtl')) {
-              steps = -steps;
-            }
-
-            Components.Run.make(Components.Direction.resolve('<' + steps));
+            Components.Run.make('' + Components.Direction.resolve('<') + steps);
           } else if (swipeDistance < -threshold && swipeDeg < settings.touchAngle) {
-            // While swipe is negative and lower than negative threshold move forward.
-            steps = toInt(settings[settings.perSwipe]);
-
-            if (Components.Direction.is('rtl')) {
-              steps = -steps;
-            }
-
-            Components.Run.make(Components.Direction.resolve('>' + steps));
+            Components.Run.make('' + Components.Direction.resolve('>') + steps);
           } else {
             // While swipe don't reach distance apply previous transform.
             Components.Move.make();
@@ -3794,7 +3782,7 @@
      * - window resize to update slider
      */
     Binder.on('resize', window, throttle(function () {
-      Glide.settings = mergeOptions(settings, Breakpoints.match(points));
+      Glide.settings = mergeDeep(settings, Breakpoints.match(points));
     }, Glide.settings.throttle));
 
     /**
