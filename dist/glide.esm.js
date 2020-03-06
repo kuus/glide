@@ -3289,6 +3289,10 @@ function Controls (Glide, Components, Events) {
 
       this.resetArrowState(next, previous);
 
+      if (Glide.settings.loop) {
+        return;
+      }
+
       if (Glide.index === 0) {
         this.disableArrow(previous);
       }
