@@ -1724,7 +1724,7 @@ function Sizes (Glide, Components, Events) {
      * @return {Number}
      */
     get: function get() {
-      return Components.Html.root.getBoundingClientRect().width;
+      return Components.Html.track.getBoundingClientRect().width;
     }
   });
 
