@@ -59,7 +59,7 @@ export default function (Glide, Components, Events) {
      * @return {Number}
      */
     get () {
-      return Components.Html.root.getBoundingClientRect().width
+      return Components.Html.track.getBoundingClientRect().width
     }
   })
 
