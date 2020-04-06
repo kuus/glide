@@ -1730,7 +1730,12 @@
        * @return {Number}
        */
       get: function get() {
-        return Components.Html.track.getBoundingClientRect().width;
+        var _Components$Html = Components.Html,
+            root = _Components$Html.root,
+            track = _Components$Html.track;
+
+        var element = Glide.settings.sizeByTrack ? track : root;
+        return element.getBoundingClientRect().width;
       }
     });
 

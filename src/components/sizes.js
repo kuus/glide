@@ -59,7 +59,9 @@ export default function (Glide, Components, Events) {
      * @return {Number}
      */
     get () {
-      return Components.Html.track.getBoundingClientRect().width
+      const { root, track } = Components.Html;
+      const element = Glide.settings.sizeByTrack ? track : root;
+      return element.getBoundingClientRect().width
     }
   })
 
