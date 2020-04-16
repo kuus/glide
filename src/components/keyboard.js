@@ -45,7 +45,8 @@ export default function (Glide, Components, Events) {
      * @return {Void}
      */
     press (event) {
-      const { perSwipe } = Glide.settings
+      let { perSwipe } = Glide.settings
+      perSwipe = typeof perSwipe === "number" ? perSwipe : "";
 
       if (event.keyCode === 39) {
         Components.Run.make(Components.Direction.resolve(`${perSwipe}>`))
