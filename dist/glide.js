@@ -3514,6 +3514,7 @@
       press: function press(event) {
         var perSwipe = Glide.settings.perSwipe;
 
+        perSwipe = typeof perSwipe === "number" ? perSwipe : "";
 
         if (event.keyCode === 39) {
           Components.Run.make(Components.Direction.resolve(perSwipe + '>'));
