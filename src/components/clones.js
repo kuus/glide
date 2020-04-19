@@ -9,7 +9,8 @@ export default function (Glide, Components, Events) {
       this.items = []
 
       if (Glide.settings.loop) {
-        this.items = this.collect()
+        this.items = this.collect();
+        Events.emit("clones.after");
       }
     },
 

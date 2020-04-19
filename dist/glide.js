@@ -1874,6 +1874,7 @@
 
         if (Glide.settings.loop) {
           this.items = this.collect();
+          Events.emit("clones.after");
         }
       },
 
