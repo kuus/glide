@@ -16,9 +16,19 @@ export default function (Glide, Components) {
       this.root = Glide.selector
       this.root.classList.add("glide--mounted");
       this.track = this.root.querySelector(TRACK_SELECTOR)
-      this.slides = Array.prototype.slice.call(this.wrapper.children).filter((slide) => {
-        return !slide.classList.contains(Glide.settings.classes.slide.clone)
-      })
+      this.slides = [];
+
+      let realSlideIdx = 0;
+
+      for (let i = 0; i < this.wrapper.children.length; i++) {
+        const slide = this.wrapper.children[i];
+        const isClone = slide.classList.contains(Glide.settings.classes.slide.clone);
+        if (!isClone) {
+          slide.setAttribute("data-glide-idx", realSlideIdx);
+          this.slides.push(slide);
+          realSlideIdx++;
+        }
+      }
     }
   }
 
