@@ -36,7 +36,7 @@ export default {
    *
    * @type {Number}
    */
-  gap: 10,
+  gap: 0,
 
   /**
    * Change slides after a specified interval. Use `false` for turning off autoplay.
@@ -64,7 +64,7 @@ export default {
    *
    * @type {Boolean}
    */
-  loop: false,
+  loop: true,
 
   /**
    * Stop running `perView` number of slides from the end. Use this
@@ -90,7 +90,7 @@ export default {
    * `perView` - Moves slider by one slide per swipe
    * `perMove` - Moves slider between views per swipe (number of slides defined in `perView` options)
    *
-   * @type {String}
+   * @type {"perView" | "perMove"}
    */
   perSwipe: 'perView',
 
@@ -199,14 +199,14 @@ export default {
       rtl: 'glide--rtl'
     },
     slide: {
-      clone: 'glide__slide--clone',
-      active: 'glide__slide--active'
+      clone: 'is-clone',
+      active: 'is-active'
     },
     arrow: {
-      disabled: 'glide__arrow--disabled'
+      disabled: 'is-disabled'
     },
     nav: {
-      active: 'glide__bullet--active'
+      active: 'is-active'
     }
   }
 }
