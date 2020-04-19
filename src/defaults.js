@@ -46,6 +46,14 @@ export default {
   autoplay: false,
 
   /**
+   * When `false` it will make the slider respond only to interactions with
+   * Controls or Autoplay preventing the user to swipe the slides.
+   *
+   * @type {boolean}
+   */
+  swipeable: true,
+
+  /**
    * Stop autoplay on mouseover event.
    *
    * @type {Boolean}

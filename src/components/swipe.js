@@ -261,7 +261,9 @@ export default function (Glide, Components, Events) {
    * - after initial building
    */
   Events.on('build.after', () => {
-    Components.Html.root.classList.add(Glide.settings.classes.swipeable)
+    if (Glide.settings.swipeable) {
+      Components.Html.root.classList.add(Glide.settings.classes.swipeable)
+    }
   })
 
   /**
