@@ -48,7 +48,7 @@
      *
      * @type {Number}
      */
-    gap: 10,
+    gap: 0,
 
     /**
      * Change slides after a specified interval. Use `false` for turning off autoplay.
@@ -56,6 +56,14 @@
      * @type {Number|Boolean}
      */
     autoplay: false,
+
+    /**
+     * When `false` it will make the slider respond only to interactions with
+     * Controls or Autoplay preventing the user to swipe the slides.
+     *
+     * @type {boolean}
+     */
+    swipeable: true,
 
     /**
      * Stop autoplay on mouseover event.
@@ -76,7 +84,7 @@
      *
      * @type {Boolean}
      */
-    loop: false,
+    loop: true,
 
     /**
      * Stop running `perView` number of slides from the end. Use this
@@ -102,7 +110,7 @@
      * `perView` - Moves slider by one slide per swipe
      * `perMove` - Moves slider between views per swipe (number of slides defined in `perView` options)
      *
-     * @type {String}
+     * @type {"perView" | "perMove"}
      */
     perSwipe: 'perView',
 
@@ -211,14 +219,14 @@
         rtl: 'glide--rtl'
       },
       slide: {
-        clone: 'glide__slide--clone',
-        active: 'glide__slide--active'
+        clone: 'is-clone',
+        active: 'is-active'
       },
       arrow: {
-        disabled: 'glide__arrow--disabled'
+        disabled: 'is-disabled'
       },
       nav: {
-        active: 'glide__bullet--active'
+        active: 'is-active'
       }
     }
   };
@@ -613,6 +621,9 @@
         this._e.emit('mount.before');
 
         if (isObject(extensions)) {
+          if (!this.settings.swipeable) {
+            delete extensions.Swipe;
+          }
           this._c = mount(this, extensions, this._e);
         } else {
           warn('You need to provide a object on `mount()`');
@@ -2925,7 +2936,9 @@
      * - after initial building
      */
     Events.on('build.after', function () {
-      Components.Html.root.classList.add(Glide.settings.classes.swipeable);
+      if (Glide.settings.swipeable) {
+        Components.Html.root.classList.add(Glide.settings.classes.swipeable);
+      }
     });
 
     /**
