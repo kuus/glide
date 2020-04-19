@@ -100,7 +100,7 @@ export default {
    *
    * @type {"perView" | "perMove"}
    */
-  perSwipe: 'perView',
+  perSwipe: 'perMove',
 
   /**
    * Minimal swipe distance needed to change the slide. Use `false` for turning off a swiping.
