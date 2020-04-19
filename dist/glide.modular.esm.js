@@ -1421,9 +1421,19 @@ function Html (Glide, Components) {
       this.root = Glide.selector;
       this.root.classList.add("glide--mounted");
       this.track = this.root.querySelector(TRACK_SELECTOR);
-      this.slides = Array.prototype.slice.call(this.wrapper.children).filter(function (slide) {
-        return !slide.classList.contains(Glide.settings.classes.slide.clone);
-      });
+      this.slides = [];
+
+      var realSlideIdx = 0;
+
+      for (var i = 0; i < this.wrapper.children.length; i++) {
+        var slide = this.wrapper.children[i];
+        var isClone = slide.classList.contains(Glide.settings.classes.slide.clone);
+        if (!isClone) {
+          slide.setAttribute("data-glide-idx", realSlideIdx);
+          this.slides.push(slide);
+          realSlideIdx++;
+        }
+      }
     }
   };
 
