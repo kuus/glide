@@ -121,7 +121,7 @@ export default function (Glide, Components, Events) {
           Components.Move.make()
         }
 
-        Components.Html.root.classList.remove(settings.classes.dragging)
+        Components.Html.track.classList.remove(settings.classes.dragging)
 
         this.unbindSwipeMove()
         this.unbindSwipeEnd()
@@ -261,9 +261,7 @@ export default function (Glide, Components, Events) {
    * - after initial building
    */
   Events.on('build.after', () => {
-    if (Glide.settings.swipeable) {
-      Components.Html.root.classList.add(Glide.settings.classes.swipeable)
-    }
+    Components.Html.root.classList.add(Glide.settings.classes.swipeable)
   })
 
   /**

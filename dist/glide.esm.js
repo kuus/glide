@@ -52,14 +52,6 @@ var defaults = {
   autoplay: false,
 
   /**
-   * When `false` it will make the slider respond only to interactions with
-   * Controls or Autoplay preventing the user to swipe the slides.
-   *
-   * @type {boolean}
-   */
-  swipeable: true,
-
-  /**
    * Stop autoplay on mouseover event.
    *
    * @type {Boolean}
@@ -106,7 +98,7 @@ var defaults = {
    *
    * @type {"perView" | "perMove"}
    */
-  perSwipe: 'perView',
+  perSwipe: 'perMove',
 
   /**
    * Minimal swipe distance needed to change the slide. Use `false` for turning off a swiping.
@@ -207,11 +199,11 @@ var defaults = {
    */
   classes: {
     swipeable: 'glide--swipeable',
-    dragging: 'glide--dragging',
     direction: {
       ltr: 'glide--ltr',
       rtl: 'glide--rtl'
     },
+    dragging: 'is-dragging',
     slide: {
       clone: 'is-clone',
       active: 'is-active'
@@ -615,9 +607,6 @@ var Glide = function () {
       this._e.emit('mount.before');
 
       if (isObject(extensions)) {
-        if (!this.settings.swipeable) {
-          delete extensions.Swipe;
-        }
         this._c = mount(this, extensions, this._e);
       } else {
         warn('You need to provide a object on `mount()`');
@@ -1430,6 +1419,7 @@ function Html (Glide, Components) {
      */
     mount: function mount() {
       this.root = Glide.selector;
+      this.root.classList.add("glide--mounted");
       this.track = this.root.querySelector(TRACK_SELECTOR);
       this.slides = Array.prototype.slice.call(this.wrapper.children).filter(function (slide) {
         return !slide.classList.contains(Glide.settings.classes.slide.clone);
@@ -2774,7 +2764,7 @@ function Swipe (Glide, Components, Events) {
           Components.Move.make();
         }
 
-        Components.Html.root.classList.remove(settings.classes.dragging);
+        Components.Html.track.classList.remove(settings.classes.dragging);
 
         this.unbindSwipeMove();
         this.unbindSwipeEnd();
@@ -2930,9 +2920,7 @@ function Swipe (Glide, Components, Events) {
    * - after initial building
    */
   Events.on('build.after', function () {
-    if (Glide.settings.swipeable) {
-      Components.Html.root.classList.add(Glide.settings.classes.swipeable);
-    }
+    Components.Html.root.classList.add(Glide.settings.classes.swipeable);
   });
 
   /**

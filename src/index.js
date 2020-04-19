@@ -34,9 +34,6 @@ export default class Glide {
     this._e.emit('mount.before')
 
     if (isObject(extensions)) {
-      if (!this.settings.swipeable) {
-        delete extensions.Swipe;
-      }
       this._c = mount(this, extensions, this._e)
     } else {
       warn('You need to provide a object on `mount()`')

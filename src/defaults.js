@@ -46,14 +46,6 @@ export default {
   autoplay: false,
 
   /**
-   * When `false` it will make the slider respond only to interactions with
-   * Controls or Autoplay preventing the user to swipe the slides.
-   *
-   * @type {boolean}
-   */
-  swipeable: true,
-
-  /**
    * Stop autoplay on mouseover event.
    *
    * @type {Boolean}
@@ -201,11 +193,11 @@ export default {
    */
   classes: {
     swipeable: 'glide--swipeable',
-    dragging: 'glide--dragging',
     direction: {
       ltr: 'glide--ltr',
       rtl: 'glide--rtl'
     },
+    dragging: 'is-dragging',
     slide: {
       clone: 'is-clone',
       active: 'is-active'
