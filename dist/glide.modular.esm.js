@@ -1410,7 +1410,7 @@ function exist(node) {
 
 var TRACK_SELECTOR = '[data-glide-el="track"]';
 
-function Html (Glide, Components) {
+function Html (Glide, Components, Events) {
   var Html = {
     /**
      * Setup slider HTML nodes.
@@ -1434,6 +1434,9 @@ function Html (Glide, Components) {
           realSlideIdx++;
         }
       }
+    },
+    destroy: function destroy() {
+      this.root.classList.remove("glide--mounted");
     }
   };
 
@@ -1500,6 +1503,10 @@ function Html (Glide, Components) {
     get: function get() {
       return Html.track.children[0];
     }
+  });
+
+  Events.on("destroy", function () {
+    return Html.destroy();
   });
 
   return Html;

@@ -1416,7 +1416,7 @@
 
   var TRACK_SELECTOR = '[data-glide-el="track"]';
 
-  function Html (Glide, Components) {
+  function Html (Glide, Components, Events) {
     var Html = {
       /**
        * Setup slider HTML nodes.
@@ -1440,6 +1440,9 @@
             realSlideIdx++;
           }
         }
+      },
+      destroy: function destroy() {
+        this.root.classList.remove("glide--mounted");
       }
     };
 
@@ -1506,6 +1509,10 @@
       get: function get() {
         return Html.track.children[0];
       }
+    });
+
+    Events.on("destroy", function () {
+      return Html.destroy();
     });
 
     return Html;
