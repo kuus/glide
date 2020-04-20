@@ -5,7 +5,7 @@ import { isString } from '../utils/unit'
 
 const TRACK_SELECTOR = '[data-glide-el="track"]'
 
-export default function (Glide, Components) {
+export default function (Glide, Components, Events) {
   const Html = {
     /**
      * Setup slider HTML nodes.
@@ -29,6 +29,9 @@ export default function (Glide, Components) {
           realSlideIdx++;
         }
       }
+    },
+    destroy () {
+      this.root.classList.remove("glide--mounted");
     }
   }
 
@@ -94,6 +97,8 @@ export default function (Glide, Components) {
       return Html.track.children[0]
     }
   })
+
+  Events.on("destroy", () => Html.destroy())
 
   return Html
 }
