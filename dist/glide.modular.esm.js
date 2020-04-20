@@ -2943,12 +2943,13 @@ function swipe (Glide, Components, Events) {
 
   /**
    * Remove swiping bindings:
-   * - on destroying, to remove added EventListeners
+   * - on destroying, to remove added EventListeners and classes
    */
   Events.on('destroy', function () {
     Swipe.unbindSwipeStart();
     Swipe.unbindSwipeMove();
     Swipe.unbindSwipeEnd();
+    Components.Html.root.classList.remove(Glide.settings.classes.swipeable);
     Binder.destroy();
   });
 
