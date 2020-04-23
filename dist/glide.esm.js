@@ -757,6 +757,8 @@ var Glide = function () {
     value: function disable() {
       this.disabled = true;
 
+      this._e.emit('disabled');
+
       return this;
     }
 
@@ -770,6 +772,8 @@ var Glide = function () {
     key: 'enable',
     value: function enable() {
       this.disabled = false;
+
+      this._e.emit('enabled');
 
       return this;
     }
@@ -2934,11 +2938,29 @@ function Swipe (Glide, Components, Events) {
   };
 
   /**
+   * Add swipeable class to root Html element
+   */
+  function addHtmlClass() {
+    Components.Html.root.classList.add(Glide.settings.classes.swipeable);
+  }
+
+  /**
+   * Remove swipeable class to root Html element
+   */
+  function removeHtmlClass() {
+    Components.Html.root.classList.remove(Glide.settings.classes.swipeable);
+  }
+
+  /**
    * Add component class:
    * - after initial building
    */
   Events.on('build.after', function () {
-    Components.Html.root.classList.add(Glide.settings.classes.swipeable);
+    addHtmlClass();
+  });
+
+  Events.on('enabled', function () {
+    addHtmlClass();
   });
 
   /**
@@ -2949,8 +2971,12 @@ function Swipe (Glide, Components, Events) {
     Swipe.unbindSwipeStart();
     Swipe.unbindSwipeMove();
     Swipe.unbindSwipeEnd();
-    Components.Html.root.classList.remove(Glide.settings.classes.swipeable);
+    removeHtmlClass();
     Binder.destroy();
+  });
+
+  Events.on('disabled', function () {
+    removeHtmlClass();
   });
 
   return Swipe;
