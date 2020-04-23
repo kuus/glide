@@ -153,8 +153,6 @@ export default class Glide {
    */
   disable () {
     this.disabled = true
-    
-    this._e.emit('disabled')
 
     return this
   }
@@ -166,8 +164,6 @@ export default class Glide {
    */
   enable () {
     this.disabled = false
-
-    this._e.emit('enabled')
 
     return this
   }
