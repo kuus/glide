@@ -257,11 +257,29 @@ export default function (Glide, Components, Events) {
   }
 
   /**
+   * Add swipeable class to root Html element
+   */
+  function addHtmlClass() {
+    Components.Html.root.classList.add(Glide.settings.classes.swipeable)
+  }
+
+  /**
+   * Remove swipeable class to root Html element
+   */
+  function removeHtmlClass() {
+    Components.Html.root.classList.remove(Glide.settings.classes.swipeable)
+  }
+
+  /**
    * Add component class:
    * - after initial building
    */
   Events.on('build.after', () => {
-    Components.Html.root.classList.add(Glide.settings.classes.swipeable)
+    addHtmlClass()
+  })
+
+  Events.on('enabled', () => {
+    addHtmlClass()
   })
 
   /**
@@ -272,8 +290,12 @@ export default function (Glide, Components, Events) {
     Swipe.unbindSwipeStart()
     Swipe.unbindSwipeMove()
     Swipe.unbindSwipeEnd()
-    Components.Html.root.classList.remove(Glide.settings.classes.swipeable)
+    removeHtmlClass()
     Binder.destroy()
+  })
+
+  Events.on('disabled', () => {
+    removeHtmlClass()
   })
 
   return Swipe
