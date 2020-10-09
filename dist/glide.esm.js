@@ -476,7 +476,10 @@ function sortKeys(obj) {
 function mergeDeep(target, source) {
   var output = _extends({}, target);
 
-  if (isObject(target) && isObject(source)) {
+  if (isObject(source)) {
+    if (!isObject(target)) {
+      target = {};
+    }
     Object.keys(source).forEach(function (key) {
       if (isObject(source[key])) {
         if (!(key in target)) _extends(output, defineProperty({}, key, source[key]));else output[key] = mergeDeep(target[key], source[key]);
