@@ -36,7 +36,10 @@ export function sortKeys (obj) {
 export function mergeDeep (target, source) {
   let output = Object.assign({}, target)
 
-  if (isObject(target) && isObject(source)) {
+  if (isObject(source)) {
+    if (!isObject(target)) {
+      target = {};
+    }
     Object.keys(source).forEach(key => {
       if (isObject(source[key])) {
         if (!(key in target))
